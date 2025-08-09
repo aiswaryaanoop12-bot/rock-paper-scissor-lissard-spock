@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Rock Paper Scissors Lizard Spock</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #222;
+    color: #eee;
+    text-align: center;
+    padding: 20px;
+  }
+  h1 {
+    margin-bottom: 5px;
+  }
+  .choices button {
+    font-size: 2rem;
+    margin: 10px;
+    padding: 15px 25px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    background: #444;
+    color: #eee;
+    transition: background 0.3s;
+  }
+  .choices button:hover {
+    background: #666;
+  }
+  #result {
+    margin-top: 30px;
+    font-size: 1.5rem;
+  }
+  #scoreboard {
+    margin-top: 20px;
+    font-size: 1.2rem;
+  }
+</style>
+</head>
+<body>
+
+<h1>Rock Paper Scissors Lizard Spock</h1>
+<p>Choose your weapon 👇</p>
+
+<div class="choices">
+  <button data-choice="rock">🪨 Rock</button>
+  <button data-choice="paper">📄 Paper</button>
+  <button data-choice="scissors">✂ Scissors</button>
+  <button data-choice="lizard">🦎 Lizard</button>
+  <button data-choice="spock">🖖 Spock</button>
+</div>
+
+<div id="result"></div>
+<div id="scoreboard">
+  You: <span id="player-score">0</span> |
+  Computer: <span id="computer-score">0</span> |
+  Ties: <span id="ties">0</span>
+</div>
+
+<script>
+  const choices = {
+    rock: "🪨",
+    paper: "📄",
+    scissors: "✂",
+    lizard: "🦎",
+    spock: "🖖"
+  };
+
+  const rules = {
+    rock: ["scissors", "lizard"],
+    paper: ["rock", "spock"],
+    scissors: ["paper", "lizard"],
+    lizard: ["spock", "paper"],
+    spock: ["scissors", "rock"]
+  };
+
+  let playerScore = 0;
+  let computerScore = 0;
+  let ties = 0;
+
+  function getComputerChoice() {
+    const keys = Object.keys(choices);
+    return keys[Math.floor(Math.random() * keys.length)];
+  }
+
+  function getWinner(player, computer) {
+    if (player === computer) {
+      return "tie";
+    } else if (rules[player].includes(computer)) {
+      return "player";
+    } else {
+      return "computer";
+    }
+  }
+
+  function playRound(playerChoice) {
+    const computerChoice = getComputerChoice();
+    const winner = getWinner(playerChoice, computerChoice);
+
+    let resultText = `You chose ${choices[playerChoice]} ${playerChoice}. Computer chose ${choices[computerChoice]} ${computerChoice}. `;
+
+    if (winner === "tie") {
+      resultText += "It's a tie! 🤝";
+      ties++;
+    } else if (winner === "player") {
+      resultText += "You win! 🎉";
+      playerScore++;
+    } else {
+      resultText += "Computer wins! 💻";
+      computerScore++;
+    }
+
+    document.getElementById("result").textContent = resultText;
+    document.getElementById("player-score").textContent = playerScore;
+    document.getElementById("computer-score").textContent = computerScore;
+    document.getElementById("ties").textContent = ties;
+  }
+
+  document.querySelectorAll(".choices button").forEach(button => {
+    button.addEventListener("click", () => {
+      playRound(button.dataset.choice);
+    });
+  });
+</script>
+
+</body>
+</html>
